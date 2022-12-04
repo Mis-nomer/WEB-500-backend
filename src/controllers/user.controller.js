@@ -1,5 +1,7 @@
 import User from "../models/user";
 import jwt from "jsonwebtoken";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import passport from "passport";
 
 export default {
   signup: async (req, res) => {
@@ -22,6 +24,14 @@ export default {
       });
     }
   },
+  googleSignin: async (req, res) => {
+    const userInfo = await passport.authenticate("google", {
+      failureRedirect: "/",
+    });
+    res.status(200).json({
+      data: userInfo,
+    });
+  },
   signin: async (req, res) => {
     try {
       const target = req.body;
@@ -30,11 +40,11 @@ export default {
       if (!targetUser) throw `Account '${target.email}' does not exists`;
       if (!this.authenticate(target.password)) throw `Password does not match`;
 
-      user.password = null;
+      user.password = null; 
 
       return res.status(200).json({
         data: user,
-        accessToken: token
+        accessToken: token,
       });
     } catch (error) {
       res.status(400).json({

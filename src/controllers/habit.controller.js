@@ -1,13 +1,11 @@
 import Habit from "../models/habit";
 
 export default {
-  read: async (req, res) => {
-    console.log("first");
-
+  get: async ({ query }, res) => {
     try {
-      const id = req.params.id;
-      const habit = id ? await Habit.findOne({ _id: id }) : await Habit.find();
-
+      const habit = query
+        ? await Habit.aggregate([{ $match: query }])
+        : await Habit.find();
       return res.status(200).json({ data: habit });
     } catch (error) {
       res.status(400).json({ message: "User's data not found" });
@@ -25,10 +23,10 @@ export default {
   },
   update: async (req, res) => {
     try {
-      const id = req.params.id;
       const body = req.body;
-      const habit = await Habit.findOneAndUpdate({ _id: id }, body, {
-        new: true,
+
+      const habit = await Habit.findOneAndUpdate({ _id: req.params.id }, body, {
+        new: false,
       });
 
       res.status(200).json({ data: habit });

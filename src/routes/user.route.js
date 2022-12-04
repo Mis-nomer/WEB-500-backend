@@ -3,10 +3,11 @@ import ctrl from "../controllers/user.controller";
 import { auth } from "../middlewares/auth";
 
 const router = express.Router();
-const {signup, signin, list} = ctrl;
+const {signup, googleSignin, signin, list} = ctrl;
 
 router.post("/signup", signup);
 router.post("/signin", signin);
-router.get("/user", list);
+router.post("/googleSignin", googleSignin);
+router.get("/users", list);
 
 export default router;

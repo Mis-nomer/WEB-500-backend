@@ -1,9 +1,12 @@
 import User from "../models/user";
 
+var passport = require("passport");
+
 export const auth = async (req, res, next) => {
   try {
     const target = req.body;
     const targetUser = await User.findOne({ email: target.email });
+    
     res.status(200).json({
       data: targetUser,
     });

@@ -3,38 +3,35 @@ import User from "./user";
 
 const habitSchema = mongoose.Schema(
   {
-    habits: [
-      {
-        email: {
-          type: String,
-        },
-        title: {
-          type: String,
-          maxLength: 150,
-        },
-        description: {
-          type: String,
-          maxLength: 200,
-        },
-        startDate: {
-          type: Date,
-          default: Date.now,
-          required: true,
-        },
-        repeat: {
-          type: [String],
-        },
-        streak: {
-          type: [Date],
-        },
-        options: {
-          reminder: {
-            type: Boolean,
-            default: true,
-          },
-        },
+    email: {
+      type: String,
+    },
+    title: {
+      type: String,
+      maxLength: 150,
+    },
+    description: {
+      type: String,
+      maxLength: 200,
+    },
+    startDate: {
+      type: Date,
+      default: Date.now,
+      required: true,
+    },
+    repeat: {
+      type: [String],
+    },
+    streak: {
+      default: [],
+      type: [String],
+    },
+    options: {
+      reminder: {
+        type: Boolean,
+        default: true,
       },
-    ],
+    },
   },
   { timestamps: true }
 );
@@ -46,6 +43,5 @@ habitSchema.methods = {
     return user;
   },
 };
-
 
 export default mongoose.model("Habit", habitSchema);

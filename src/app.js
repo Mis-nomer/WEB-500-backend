@@ -38,7 +38,7 @@ app.use(morgan("tiny"));
 app.use(cors())
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 app.use("/api", habitRouter);
-app.use("/", userRouter);
+app.use("/api", userRouter);
 app.listen(8080, () => {
   console.log("Server is running on port 8080");
 });
