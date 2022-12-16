@@ -39,18 +39,25 @@ mongoose
 
 // configs
 app.use(morgan("tiny"));
-app.use(cors());
-// app.use(cors({ origin: "http://localhost:8080", credentials: true }));
+
+// !!Bad cors setup
+app.use(
+  cors({
+    origin: "*",
+    credentials: true,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 app.use(
-  "/api",
+  "/api/data",
   expressjwt({ secret: process.env.CLIENT_SECRET, algorithms: ["HS256"] }),
   habitRouter
 );
-app.use("/api", userRouter);
+app.use("/api/user", userRouter);
 app.listen(process.env.PORT, () => {
   console.log("Server is running on port " + process.env.PORT);
 });

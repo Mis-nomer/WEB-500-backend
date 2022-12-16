@@ -1,6 +1,6 @@
 import User from "../models/user";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { jwt } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
 
 export default {
@@ -28,19 +28,29 @@ export default {
   signin: async (req, res) => {
     try {
       const { email, password } = req.body;
+
       const user = await User.findOne({ email });
+      let { avatar, isAdmin, name } = user;
+
       if (!user) throw `Account '${email}' does not exists`;
       if (!user.authenticate(password)) throw `Password does not match`;
 
-      const token = jwt.sign("HS256", process.env.CLIENT_SECRET, {
-        email,
-      });
+      const token = jwt.sign(
+        {
+          avatar,
+          isAdmin,
+          name,
+          email,
+        },
+        process.env.CLIENT_SECRET,
+        { algorithm: "HS256" }
+      );
+
       return res.status(200).json({
-        data: user,
-        accessToken: token,
+        token,
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return res.status(400).send(error);
     }
   },
