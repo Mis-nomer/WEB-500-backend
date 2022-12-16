@@ -6,6 +6,10 @@ import morgan from "morgan";
 import cors from "cors";
 import habitRouter from "./routes/habit.route";
 import userRouter from "./routes/user.route";
+import * as dotenv from "dotenv";
+import { expressjwt } from "express-jwt";
+
+dotenv.config();
 
 const app = express();
 const options = {
@@ -33,12 +37,20 @@ mongoose
   .then(() => console.log("DB Connected"))
   .catch((error) => console.error("Cannot Connect to DB", error));
 
-app.use(express.json());
+// configs
 app.use(morgan("tiny"));
-app.use(cors())
+app.use(cors());
+// app.use(cors({ origin: "http://localhost:8080", credentials: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
-app.use("/api", habitRouter);
+app.use(
+  "/api",
+  expressjwt({ secret: process.env.CLIENT_SECRET, algorithms: ["HS256"] }),
+  habitRouter
+);
 app.use("/api", userRouter);
-app.listen(8080, () => {
-  console.log("Server is running on port 8080");
+app.listen(process.env.PORT, () => {
+  console.log("Server is running on port " + process.env.PORT);
 });

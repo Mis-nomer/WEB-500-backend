@@ -12,12 +12,15 @@ const habitSchema = mongoose.Schema(
     },
     description: {
       type: String,
-      maxLength: 200,
+      maxLength: 500,
     },
     startDate: {
       type: Date,
       default: Date.now,
       required: true,
+    },
+    labels: {
+      type: [String],
     },
     repeat: {
       type: [String],

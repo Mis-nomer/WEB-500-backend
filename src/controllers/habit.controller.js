@@ -2,6 +2,7 @@ import Habit from "../models/habit";
 
 export default {
   get: async ({ query }, res) => {
+    console.log("first")
     try {
       const habit = query
         ? await Habit.aggregate([{ $match: query }])
@@ -12,6 +13,7 @@ export default {
     }
   },
   add: async (req, res) => {
+    console.log(req.body);
     try {
       const body = req.body;
       const habit = await new Habit(body).save();
@@ -24,7 +26,6 @@ export default {
   update: async (req, res) => {
     try {
       const body = req.body;
-
       const habit = await Habit.findOneAndUpdate({ _id: req.params.id }, body, {
         new: false,
       });
@@ -37,8 +38,7 @@ export default {
   remove: async (req, res) => {
     try {
       const id = req.params.id;
-      const habit = await Habit.findOneAndDelete({ _id: id });
-
+      const habit = await Habit.deleteOne({ _id: id });
       res.status(200).json({ data: habit });
     } catch (error) {
       res.status(400).json({ message: "Cannot delete habit" });
